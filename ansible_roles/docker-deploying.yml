@@ -1,0 +1,8 @@
+- name: docker | deploy container
+  docker_container:
+    name: "{{ item.change }}-{{ item.chain }}-{{ item.version}}"
+    image: "chainstorage/{{ item.cname }}:{{ item.version }}"
+    state: started
+    volumes:
+        - "/{{ mnt_data }}/{{ item.cname }}- {{ item.chain }}:/data"
+        # and other needed folders

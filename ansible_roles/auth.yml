@@ -1,0 +1,9 @@
+- name: deploy | create users
+  user:
+    name: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+    grups: ""
+    password: "{{ temppw | password_hash('sha512') }}"
+    update_password: on_create
+  register: changes
+  with_items: "{{ users }}"
