@@ -1,0 +1,14 @@
+- name: setup | gret facts
+  setup:
+    filter: ansible_*
+
+- name: setup | show some facts
+  debug:
+    msg: >
+      HOST:
+      IP:
+      MAC:
+      MOUNTS:
+      DEVICES:
+
+      

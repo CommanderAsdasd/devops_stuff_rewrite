@@ -1,0 +1,33 @@
+roles:
+  - uni.virt_kvm
+
+- name: generate configs
+  connection: local
+  no_log: True
+  include: "pre.yml"
+  tags:
+    - always
+    - virt_kvm_generate-cfg
+
+- name: Preparing system
+  include: "preparing.yml"
+  tags: virt_kvm_preparing
+
+- name: LVM setting ip
+  include: "lvm.yml"
+  when: hv_lvm
+
+- name: Patching vmbuilder
+  include: "patching.yml"
+  tags:
+    - virt_kvm_preparing
+    - virt_kvm_patching
+  when: not ansible_check_mode
+
+- name: Making cache
+  include: "chroot.yml"
+  tags: virt_kvm_chroot
+
+- name: VMS tasks
+  include: "vms.yml"
+  tags: virt_kvm_vms

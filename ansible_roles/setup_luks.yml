@@ -1,0 +1,7 @@
+- name: luks | install packages
+
+- name: luks | check if luks already exists
+  shell: >
+    cryptsetup isLuks {{ item.device }}
+  register: isluks_var|success
+  failed_when: isluks_var|success

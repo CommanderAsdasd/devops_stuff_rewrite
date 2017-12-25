@@ -1,0 +1,21 @@
+50-wired.network
+[Match]
+name=enp1s0
+
+[Network]
+DHCP=ipv4
+
+[Network]
+Address=10.1.10.9/24()
+Gateway=10.1.10.1
+DNS=10.1.10.1
+
+[Match]
+MACAddress=12:34:56:78:90:ab
+
+[Link]
+Description=USB to Ethernet Adapter
+Name=ethusb0
+
+#Config files - located in /usr/lib/sytemd/network
+

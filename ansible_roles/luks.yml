@@ -1,0 +1,29 @@
+- name: Luks | install packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ packages }}"
+
+- name: luks | check if luks already exists
+  shell: >
+    cryptsetup isLuks {{ item.device }}
+  register: isluks_var
+  failed_when: isluks_var|success
+  with_items: "{{ luks }}"
+
+- name: luks | create luks device
+  expect:
+    command: "cryptsetup luksFormat {{ item.device }}"
+    responses:
+      'Type uppercase yes' : 'YES'
+      'Enter passphrase' : "{{ lukspw }}"
+      'Verify passphrase' : "{{ lukspw }}"
+  with_items: "{{ luks }}"
+
+#cryptsetup luksOpen --allow-discards /dev/md1 vg_decrypted
+- name: lujks | activate luks device
+  expect:
+    command: "cryptsetup luksOpen --allow-discards {{ item.device }} {{ item.name }}"
+    responses:
+        "Enter passphrase for": "{{ lukspw }}"
+  with_items: "{{ luks }}"

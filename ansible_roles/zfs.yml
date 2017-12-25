@@ -1,0 +1,30 @@
+---
+- name: init zfs
+  include: init_zfs.yml
+  when: zfs_pool is defined
+  tags: zfs
+
+- debug:
+    msg: zfs is done
+  when: zfs_pools is defined
+
+#init_zfs.yml
+- name: zfs | install packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_item: "{{ packages }}"
+
+- name: zfs | mkdir for zfs pools
+
+- name: zfs | get zfs pool list
+  shell: >
+    zpool list | cut -d ' ' -f 1 | grep -v NAME
+  register: zpool_list
+  changed_when: false
+  check_mode: no
+
+- name: zfs | init zfs pools
+  shell: >
+      zpool create -0 compression={{ item.compression | default ("off") }} {{ item.name }} {{ item.phuysical_device }} -m {{ item.mountpoint }}
+  with_items: "{{ zfs_pools }}"

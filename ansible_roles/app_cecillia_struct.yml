@@ -1,0 +1,6 @@
+#app_cecillia_struct.yml
+# serial is for Z
+
+- name: deploy cecilia
+  hosts: hv01.ovh1.loc
+  serial: 1

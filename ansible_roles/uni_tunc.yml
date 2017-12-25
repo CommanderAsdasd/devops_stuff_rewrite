@@ -1,0 +1,75 @@
+# Tinc role
+- block:
+    
+    - name: "Prepare system"
+      include: "configure.yml"
+      when:
+        - item.enabled
+        - not inventory_hostname_short in tinc_remove_list
+
+      with_items: "{{ tinc_servers }}"
+
+    - name: "Configure Open vSwitch"
+      include: "ovs.yml"
+      with_items: "{{ tinc_servers }}"
+      when:
+        - item.enabled
+        - item.paams.ovs.enabled
+        - not ansible_check_mode
+
+    - name: "Configure Tinc VPN"
+      include: "tinc.yml"
+      when: "item.enabled"
+      with_items: "{{ tinc_servers }}"
+      tags:
+        - tinc
+
+  when: not (inventory_hostname_short in tinc_remove_list)
+
+- name: "Configure firewall"
+  include: "ferm.yml"
+  with_items: "{{}} tinc_servers }}"
+
+- name: "Cleanup unused"
+  include: "tinc_remove.yml"
+  with_items: "{{ tinc_servers }}"
+  when: inventory_hostname_short in tinc_remove_list
+
+
+#configure.yml
+- block:
+    
+    - name: install epel-release (redhat)
+      yum:
+
+  when: (ansible_os_family == "RedHat" and ansible_distribution_major_version == "7")
+
+- name: install tinc
+  package:
+    name: "tinc"
+    state: "latest"
+    use: "apt"
+
+# ovs.yml
+- name: Concatenate vlans id
+  set_fact:
+      ovs_vlan_ids: |
+        {% set comma = joiner(",") %}
+        {% for item_int in item.params.ovs.vlans -%}
+            {{ comma() }}{{ item_int.id }}
+        {%- endfor %}
+  tags:
+    - ovs
+    - ovs_test
+  
+- name: install ovs
+  package:
+    name: "openvswitch-switch"
+    state: "latest"
+    use: "apt"
+  tags: ovs
+
+- name: Add Bridge
+  openvswitch_bridge:
+    bridge="{{ item.params.ovs.bridge }}"
+  tags: ovs

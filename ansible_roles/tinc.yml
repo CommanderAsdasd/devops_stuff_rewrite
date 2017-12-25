@@ -1,0 +1,18 @@
+- name: deploy | mkdir /hv_keys/tinc
+  file:
+    name: "/{{ hv_keys.name }}/tinc"
+    state: directory
+    mode: 0755
+
+- name: deploy | check if /eth/tinc is dir
+  stat:
+    path: /etc/tinc
+  register: tinc_var
+
+- debug:
+    msg: "{{ tinc_var }}"
+
+- name: deploy | backup /etc/tinc
+  shell: >
+    mv /etc/tinc /etc/tinc.old-`date+%s`
+  when: tinc_var.stat.exists and tinc_var.stat.islnk == false

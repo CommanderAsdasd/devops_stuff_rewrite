@@ -1,0 +1,11 @@
+hosts:
+vars:
+  thorough: false
+tasks:
+  - name: apt - install nfs-common only when thorough is true
+    when: thorough | bool
+    apt:
+      cache_valid_time: 86400
+      force: yes
+      pkg:
+        - nfs-common

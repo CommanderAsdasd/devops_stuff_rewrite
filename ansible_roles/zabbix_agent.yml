@@ -1,0 +1,43 @@
+- include: "ubuntu.yml"
+- include: "configure.yml"
+
+- name: Remove Zabbix-release package
+  apt: name="zabbix-release" state=absent purge=yes
+
+- name: Add Zabbix repository apt-key
+  apt_key:
+    url: 'https://'
+    
+- name: Add Zabbix repository
+  apt_repository:
+
+- name: Install zabbix-agent
+  apt:
+    name:
+    update_cache: yesstate: latest
+  with_items:
+  notify: disable zabbix-agent
+
+- name: Install pip
+
+# Configure.yml
+- name: Configure zabbix-agent
+  template:
+  notify:
+
+- name: Install scripts dependencies
+  pip:
+  woth_items:
+
+- name: Directory for scripts zabbix-agents
+
+- name: Upload scripts zabbix-agent
+
+- name: Upoad userparameter_*.conf
+
+- name: Start zabbix-agent and add it to autorun
+  service:
+    name: zabbix-agent
+    state: started
+    enabled: yes
+  when: not ansible_check_mode

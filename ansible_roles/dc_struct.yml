@@ -1,0 +1,91 @@
+---
+- name: install server step 1
+  hosts:
+  gather_facts: no
+  vars:
+
+  roles:
+    - role: dc/base/update_fingerprint
+    - role: dc/base/setup
+
+# User is specified in hosts
+- name: install server step2
+  include:
+  tags:
+# step 1
+#dc/base/update_fingerprint
+- name: cleanup_fingerprint
+
+- name: cleanup fingerprint
+- name: ssh scan for new fingerprint
+
+#dc/base/setup
+- name: cleanup disks
+- name: parted
+- name: swraid
+- name: setup os to server
+
+
+#dc/base/setup/cleanup disks
+- name: setup | get facts
+- name: setup | shjow facts
+- name: setup | check mac #MAC is wrong
+- name: setup | confirm removing all data from disks
+- name: setup | check if yes #PROMPT
+- name: setup | md stop
+  shell: >
+    cat /proc/mdstat | grep ^md | awk '{print $1}' | xargs -r mdadm --stop --force
+- name: setup | zero md superblock
+- name: setup | wipefs for parts
+- name: setup | wipefs for disks
+
+
+#dc/base/setup/cleanup disks
+#dc/base/setup/cleanup disks
+#dc/base/setup/setup os to server
+- base checks, mkfs root device, create mount point, mount root device, 
+
+# step 2
+---
+- name: install server step 2
+  hosts: hypervisors
+  gather_facts: no
+
+  vars:
+    ansible_ssh_user: user
+    ansible_sudo_pass: "{{ userpw }}"
+  
+  vars_files:
+    - group_vars/vault
+
+  roles:
+    - role: dc/vase/update_fingerprint
+    - role: dc/luks
+
+- name: main hv deploy playbook
+  include: playbook.yml
+
+# The both starts with update fingerprint
+# /dc/luks
+# setup_luks.yml
+- name: luks | install packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_item: "{{ packages }}"
+
+- name: luks | check if luks already exists
+  shell: >
+    cryptsetup isLuks {{ item.device }}
+  register: isluks_var
+  failed_when: isluks_var|success
+  with_items: "{{ luks }}"
+
+# expect exec command and wait prompt
+- name: luks | create luks device
+  expect:
+    command: "cryptsetup luksOpen --allow-discards {{ item.device }} {{ item.name }}"
+    responses:
+        "Enter passphrase for": "{{ lukspw }}"
+  with_items: "{{ luks }}"
+# need to open lucs drive like this?

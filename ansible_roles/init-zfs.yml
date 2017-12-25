@@ -1,0 +1,5 @@
+- name: zfs | install packages
+apt:
+  name: "{{ item }}"
+  state: installed
+with_items: "{{ packages }}"
