@@ -4,6 +4,7 @@
       -e MYSQL_PASSWORD="zabbix_pwd" \
       -e MYSQL_ROOT_PASSWORD="root_pwd" \
       -d mysql:5.7 \
+      -v /data/zabbix/mysql/:/var/lib/mysql \
       --character-set-server=utf8 --collation-server=utf8_bin
 
  docker run --name zabbix-java-gateway -t \
@@ -33,3 +34,4 @@
       -d zabbix/zabbix-web-nginx-mysql:latest
 
 # How to write docker -e to ansible
+# No 

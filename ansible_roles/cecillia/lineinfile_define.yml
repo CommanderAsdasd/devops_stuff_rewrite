@@ -1,0 +1,23 @@
+# register value is different from module to module
+- debug:
+  msg: "{{ chain_found }}"
+
+- lineinfile:
+    path: 
+    regexp: '^SELINUX' #find line
+    line: 'SELINUX=enforcing' #replace with
+
+- lineinfile:
+    path:
+    state: absent
+
+
+#when and other conditionals
+- name: daemons | check if parity chain specified
+  lineinfile:
+    path: 
+    regexp:
+    state:
+  register:
+  when: item.cname == "parity" and item.chain == "classic"
+  with_items: "{{ ccur_list }}"

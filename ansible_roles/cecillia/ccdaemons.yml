@@ -1,0 +1,30 @@
+- name: deploy cecilia
+  roles:
+    - app_cecillia/docker
+    - { role: app_cecilia/ccdaemons,
+    }
+    - { role: app_cecilia/snapshoter
+    }
+    - { role: app_cecilia/nginx
+    }
+
+# ccdaemons
+- include: network.yml
+  tags: network
+
+- include: docker.yml
+
+#docker.yml
+- name: install pip
+- name: touch zfs
+- name: docker | deploy container
+
+# main - snapshoter.yml
+- name: snapshoter | install apt packages
+- name: snapshoter | check symlink to current version
+- name: snapshoter | get current version
+- name: snapshoter | git clone
+- name: snapshoter | deploy to remote
+- name: snapshoter | configure virtualenv
+- name: snapshoter | make link
+- name: snapshoter | cron

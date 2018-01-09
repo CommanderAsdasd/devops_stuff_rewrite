@@ -1,0 +1,26 @@
+---
+# tasks
+
+- name: "Include OS-specific vars"
+- name: "set short version name"
+- name: "INstall the correct repo"
+  include: Debian.yml
+
+# Debian.yml
+- name: "Debian | Set some facts" 
+- name: "Debian | install php7.0-db" 
+- name: "Debian | install php7.1" 
+- name: "Debian | install php 5.6" 
+- name: "Debian | Install zabbix-web" 
+- name: "Debian | install nginx config" 
+- name: "Debian | Install Ansible module deps" 
+- name: "Debian | Install Mysql Client package" 
+- name: "Debian | " 
+- name: "Debian |" 
+
+
+- name: "install the mysql db"
+- name: "Configure zabbix-server"
+- name: "Create include dor zabbix=server"
+- name: "Create zabbix-web dir"
+- name: "Configure zabbix-web"
