@@ -11,6 +11,27 @@ def get_snapshots_list(args=None):
             snapshot_list.append([d.split('night')[0], h])
     return snapshot_list
 
+# --depth for snaps depg. Default 10
+def remove_snapshots(args, snapshot_list):
+    l = len(snapshot_list)
+    if l < args.deep:
+        exit()
+    sorted_by_h = sorted(snapshot_list, key=lambda tup: tup[1], reverse=True)
+
+    i = args.deep
+    while i < l:
+        sh_command = 'sudo zfs destroy {zfspool_name}/{blockchain}@{timestamp}hight{hight}'.format(
+            zfspool_name=zfspool,
+            blockchain=args.blockchain,
+            timestamp=str(sorted_by_h[i][0]),
+            hight=str(sorted_by_h[i][1]))
+        proc = Popen(sh_command, shell=True, stdout=PIPE, stderr=PIPE)
+        proc.wait()
+        if proc.returncode:
+            continue
+        i = i + 1
+
+
 def main(argv=None):
     args = ParseCommandLine()
     snapshot_list = get_snapshots_list(args)
@@ -32,3 +53,4 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.exit(main())
+

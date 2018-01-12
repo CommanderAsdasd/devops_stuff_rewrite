@@ -1,0 +1,15 @@
+#main.yml
+- include: currency_daemons.yml
+
+- name: "check req vars"
+- name: "sys | "ensure app_base_dir existed
+install cnlike components
+install btclike components
+install other components
+install other components
+
+check cname is unknown
+
+configure cn_like components
+configure btc_like components
+configure other components

@@ -1,0 +1,83 @@
+---
+- name: Generate congifg
+  include: "pre.yml"
+
+- name: Prepariing system
+  preparing.yml
+
+- name: LVM setting up
+  lvm.yml
+
+- name: Patching vmbuider
+  patching.yml
+
+- name: Making cache
+  chroot.yml
+
+- name: VMS tasks
+  vms.yml
+
+# Целое метапрограммирование
+# pre.yml
+- name: Generate preconfig dict
+  set_fact:
+
+- name: Generate config dict
+  set_fact:
+
+- name: Prebuilding hosts's  groups
+  set_fact:
+
+- name: building host's groups
+  set_fact:
+
+- debug: var="{{ inverntory_hostname_short }}_vms "
+
+# preparing.yml
+- name: Only run "update_cache=yes" if the last 
+
+# lvm.yml
+- name: install toolset
+  package:
+    name: "{{ item }}"
+    state: latests
+    use: apt
+  with_items:
+    - "thin-provisioning-tools"
+
+# stat retrieve file or file system status
+- name: Check for decrypted vol is opened
+  stat:
+    path: "/dev/mapper/{{ luks_decrypted }}"
+  register: crypt
+
+
+# vms.yml
+- name: create libvirt templates (libvirt)
+- name: create libvirt templates (interfaces)
+- name: Check for decrypted vol is opened
+- name: Get  all vms
+- block:
+    - name: Check lvm pool
+    - block:
+      - name: VM task
+        include: vm.yml
+
+# vm.yml
+- block:
+    - name: Create vmbuilder template for {{ item.fullname }}
+      template:
+        src: "vmbuilder/vm.j2"
+        dest: "{{ vmbuilder_home }}/{{ item.name }}.{{ item.guest_domain }}_build.sh"
+        mode: 750
+
+    - name: Creates lvm volumes for {{ item.fullname }}
+
+    - name: Create vms {{ item.fullname }}
+      no_log: False
+      command: './{{ item.fullname }}_build.sh'
+
+  when:
+    - "item.fullname is defined"
+    - "item.fullname"
+    - "item.fullname not in vms_on_host.list_vms"

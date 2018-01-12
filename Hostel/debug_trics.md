@@ -1,0 +1,1 @@
+# Watch nginx logs for see what happened after REST API is asked
