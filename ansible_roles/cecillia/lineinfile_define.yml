@@ -21,3 +21,13 @@
   register:
   when: item.cname == "parity" and item.chain == "classic"
   with_items: "{{ ccur_list }}"
+
+# test lineinfile first. Test is better with shel commands
+- name: Test for line
+  shell: grep "^couchbase.host" /database.properties
+  register: test_grep
+
+- name: add couchbase host to properties
+  lineinfile: 
+    dest: /database.properties 
+    line: "couchbase.host=127.0.0.1"

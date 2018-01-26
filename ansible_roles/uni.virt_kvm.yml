@@ -72,6 +72,11 @@
         mode: 750
 
     - name: Creates lvm volumes for {{ item.fullname }}
+      command: 'lvcreate -V {{ inside_item.value.size }}G -T {{ item.lvm_vg }}/{{ item.lvm_vm_pool }} -n {{ inside_item.value.volume }}'
+      args:
+        creates: "/dev/{{ item.lvm_vg }}/{{ inside_item.value.volume }}"
+      with_dict: '{{ item.append_disk }}'
+      
 
     - name: Create vms {{ item.fullname }}
       no_log: False
@@ -81,3 +86,5 @@
     - "item.fullname is defined"
     - "item.fullname"
     - "item.fullname not in vms_on_host.list_vms"
+
+

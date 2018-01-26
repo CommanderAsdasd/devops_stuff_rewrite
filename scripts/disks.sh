@@ -2,3 +2,4 @@
 cat /sys/block/sda/queue/rotational
 
 
+# atop

@@ -1,0 +1,12 @@
+# perfom a mysql query
+- name: retrieve stuff
+  command: >
+    mysql --user= --password= dbname --host= --batch --skip-column-names --execute="insert into supermasters values ('111.111.111.111', 'ns2.example-dns.com', 'admin');"
+  register : stuff
+  always_run: True
+  changed_when: False
+
+- name: Do something with stff
+  debug: "{{ item }}"
+  with_items: stuff.stduot_lines
+

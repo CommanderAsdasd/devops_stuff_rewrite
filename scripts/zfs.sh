@@ -24,3 +24,7 @@ zfs list -t all -r tank
 # Now let's delete file 1 and look 
 #zfs scrub check consistency of files
 rm /tank/file1zpool scrub tank
+zfs list -t all -o space -r tank
+# here we can see that of 200mb 100 is snap and 100 is data
+my snapshots are consuming 18/
+snap refer is how many space it contains really
